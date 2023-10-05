@@ -28,14 +28,14 @@ def train():
 
     # Split into training and validation dataset
     length = len(file_paths)
-    train_file_paths, valid_file_paths = file_paths[:int(length * 0.8)], file_paths[int(length * 0.8):]
-    train_labels, valid_labels = labels[:int(length * 0.8)], labels[int(length * 0.8):]
+    train_file_paths, valid_file_paths = file_paths[:int(length * 0.75)], file_paths[int(length * 0.75):]
+    train_labels, valid_labels = labels[:int(length * 0.75)], labels[int(length * 0.75):]
 
     # Build training loader
     train_transform = transforms.Compose([
         transforms.RandomHorizontalFlip(),            
-        transforms.RandomRotation(20),                
-        transforms.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1, hue=0.1),
+        transforms.RandomRotation(30),                
+        transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
         transforms.RandomResizedCrop(64, scale=(0.8, 1.0)),
         transforms.Resize((64, 64)),                         
         transforms.ToTensor(),                                

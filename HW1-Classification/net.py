@@ -8,22 +8,22 @@ class my_network(nn.Module):
 
         self.main = nn.Sequential(
             # input size: (3, 64, 64)
-            nn.Conv2d(3, 10, 4, 2, 1, bias=False),  # (10, 32, 32)
-            nn.BatchNorm2d(10),
+            nn.Conv2d(3, 6, 4, 2, 1, bias=False),   # (6, 32, 32)
+            nn.BatchNorm2d(6),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(2, 2),                     # (10, 12, 12)
+            nn.MaxPool2d(2, 2),                     # (6, 12, 12)
 
-            nn.Conv2d(10, 10, 4, 2, 1, bias=False), # (10, 12, 12)
-            nn.BatchNorm2d(10),
+            nn.Conv2d(6, 6, 4, 2, 1, bias=False),   # (6, 12, 12)
+            nn.BatchNorm2d(6),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(2, 2),                     # (10, 4, 4)
+            nn.MaxPool2d(2, 2),                     # (6, 4, 4)
 
-            nn.Conv2d(10, 10, 4, 2, 1, bias=False), # (10, 2, 2)
-            nn.BatchNorm2d(10),
+            nn.Conv2d(6, 6, 4, 2, 1, bias=False),   # (6, 2, 2)
+            nn.BatchNorm2d(6),
             nn.ReLU(inplace=True),
 
-            nn.Flatten(),                           # (40)
-            nn.Linear(40, 12),                      # (12)
+            nn.Flatten(),                           # (24)
+            nn.Linear(24, 12),                      # (12)
         )
 
     def forward(self, x):
