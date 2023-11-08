@@ -22,6 +22,7 @@ from yolox.utils import (
     get_model_info,
     setup_logger
 )
+from yolox.models.network_blocks import SELayer
 
 
 def make_parser():
@@ -146,6 +147,13 @@ def main(exp, args, num_gpu):
         exp.test_size = (args.tsize, args.tsize)
 
     model = exp.get_model()
+
+    # add SELayer into model
+    for sequential in model.head.cls_convs:
+        sequential.insert(1, SELayer(channel=sequential[0].conv.out_channels))
+    for sequential in model.head.reg_convs:
+        sequential.insert(1, SELayer(channel=sequential[0].conv.out_channels))
+
     logger.info("Model Summary: {}".format(get_model_info(model, exp.test_size)))
     #logger.info("Model Structure:\n{}".format(str(model)))
 
@@ -156,7 +164,7 @@ def main(exp, args, num_gpu):
     torch.cuda.set_device(rank)
     model.cuda(rank)
     model.eval()
-
+    
     if not args.speed and not args.trt:
         if args.ckpt is None:
             ckpt_file = os.path.join(file_name, "best_ckpt.pth")

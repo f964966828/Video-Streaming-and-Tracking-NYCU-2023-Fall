@@ -31,7 +31,7 @@ from yolox.utils import (
     setup_logger,
     synchronize
 )
-
+from yolox.models.network_blocks import SELayer
 
 class Trainer:
     def __init__(self, exp: Exp, args):
@@ -143,6 +143,13 @@ class Trainer:
 
         # value of epoch will be set in `resume_train`
         model = self.resume_train(model)
+
+        # add SELayer into model
+        for sequential in model.head.cls_convs:
+            sequential.insert(1, SELayer(channel=sequential[0].conv.out_channels))
+        for sequential in model.head.reg_convs:
+            sequential.insert(1, SELayer(channel=sequential[0].conv.out_channels))
+        model.to(self.device)
 
         # data related init
         self.no_aug = self.start_epoch >= self.max_epoch - self.exp.no_aug_epochs

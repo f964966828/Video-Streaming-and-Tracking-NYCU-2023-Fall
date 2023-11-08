@@ -15,6 +15,7 @@ from yolox.data.data_augment import ValTransform
 from yolox.data.datasets import COCO_CLASSES
 from yolox.exp import get_exp
 from yolox.utils import fuse_model, get_model_info, postprocess, vis
+from yolox.models.network_blocks import SELayer
 
 IMAGE_EXT = [".jpg", ".jpeg", ".webp", ".bmp", ".png"]
 
@@ -295,6 +296,13 @@ def main(exp, args):
         exp.test_size = (args.tsize, args.tsize)
 
     model = exp.get_model()
+
+    # add SELayer into model
+    for sequential in model.head.cls_convs:
+        sequential.insert(1, SELayer(channel=sequential[0].conv.out_channels))
+    for sequential in model.head.reg_convs:
+        sequential.insert(1, SELayer(channel=sequential[0].conv.out_channels))
+
     logger.info("Model Summary: {}".format(get_model_info(model, exp.test_size)))
 
     if args.device == "gpu":
