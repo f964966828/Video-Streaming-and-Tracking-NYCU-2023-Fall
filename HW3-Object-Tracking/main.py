@@ -8,7 +8,7 @@ from instance import Instance
 from utils import *
 
 # Define input video object
-input_video_name = 'hard_9.mp4'
+input_video_name = 'demo_1.mp4'
 cap = cv2.VideoCapture(input_video_name)
 
 # Define output video object
